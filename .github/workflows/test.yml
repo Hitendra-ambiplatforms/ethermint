@@ -64,7 +64,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-        run: chmod a+x ./scripts/integration-test-all.sh
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
@@ -86,7 +85,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-        run: chmod a+x ./scripts/integration-test-all.sh
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
@@ -104,6 +102,28 @@ jobs:
           make test-integration
         if: env.GIT_DIFF
 
+  integration_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cachix/install-nix-action@v15
+      - uses: cachix/cachix-action@v10
+        with:
+          name: etherminthq
+          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
+      - name: Run integration tests
+        run: make run-integration-tests
+        if: env.GIT_DIFF
+      - name: 'Tar debug files'
+        if: failure()
+        run: tar cfz debug_files.tar.gz -C /tmp/pytest-of-runner .
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: debug-files
+          path: debug_files.tar.gz
+          if-no-files-found: ignore
+          
   test-sim-nondeterminism:
     runs-on: ubuntu-latest
     timeout-minutes: 25
