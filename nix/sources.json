@@ -1,0 +1,50 @@
+{
+    "cosmos-sdk": {
+        "branch": "main",
+        "description": ":chains: A Framework for Building High Value Public Blockchains :sparkles:",
+        "homepage": "https://cosmos.network/",
+        "owner": "cosmos",
+        "repo": "cosmos-sdk",
+        "rev": "e39d84e06fafc33dcec85db12242e5f481ed0385",
+        "sha256": "08xvq27yydg5zadmbacz5lda4pdf75whv04rm86p8bn87sjnmcxp",
+        "type": "tarball",
+        "url": "https://github.com/cosmos/cosmos-sdk/archive/e39d84e06fafc33dcec85db12242e5f481ed0385.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "gomod2nix": {
+        "branch": "master",
+        "description": "Convert applications using Go modules to Nix expressions",
+        "homepage": null,
+        "owner": "tweag",
+        "repo": "gomod2nix",
+        "rev": "d1e95112bd2dc1359330c808154a194c999b7886",
+        "sha256": "1mi6nl5vfrnwmhv10s5w304bhgx4vhvdb83mch3ccki32hwv5r7b",
+        "type": "tarball",
+        "url": "https://github.com/tweag/gomod2nix/archive/d1e95112bd2dc1359330c808154a194c999b7886.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "niv": {
+        "branch": "master",
+        "description": "Easy dependency management for Nix projects",
+        "homepage": "https://github.com/nmattia/niv",
+        "owner": "nmattia",
+        "repo": "niv",
+        "rev": "82e5cd1ad3c387863f0545d7591512e76ab0fc41",
+        "sha256": "090l219mzc0gi33i3psgph6s2pwsc8qy4lyrqjdj4qzkvmaj65a7",
+        "type": "tarball",
+        "url": "https://github.com/nmattia/niv/archive/82e5cd1ad3c387863f0545d7591512e76ab0fc41.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "master",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cda43cbf79208ff9438f074ca0e0b3807f0e1b68",
+        "sha256": "0gq3nla70g8fk45czi66yngb40asavgfq235g4h2jfvnyrlscb10",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/cda43cbf79208ff9438f074ca0e0b3807f0e1b68.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}
