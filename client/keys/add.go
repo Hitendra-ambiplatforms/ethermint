@@ -38,7 +38,8 @@ const (
 	mnemonicEntropySize = 256
 )
 
-/* RunAddCmd
+/*
+RunAddCmd
 input
 	- bip39 mnemonic
 	- bip39 passphrase
