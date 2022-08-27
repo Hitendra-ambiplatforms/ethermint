@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	dbm "github.com/tendermint/tm-db"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -20,6 +22,7 @@ import (
 	"github.com/Ambiplatforms-TORQUE/ethermint/app"
 	"github.com/Ambiplatforms-TORQUE/ethermint/crypto/hd"
 	"github.com/Ambiplatforms-TORQUE/ethermint/encoding"
+	"github.com/Ambiplatforms-TORQUE/ethermint/indexer"
 	"github.com/Ambiplatforms-TORQUE/ethermint/rpc/backend/mocks"
 	rpctypes "github.com/Ambiplatforms-TORQUE/ethermint/rpc/types"
 	evmtypes "github.com/Ambiplatforms-TORQUE/ethermint/x/evm/types"
@@ -41,7 +44,7 @@ func (suite *BackendTestSuite) SetupTest() {
 
 	baseDir := suite.T().TempDir()
 	nodeDirName := fmt.Sprintf("node")
-	clientDir := filepath.Join(baseDir, nodeDirName, "evmoscli")
+	clientDir := filepath.Join(baseDir, nodeDirName, "arciscli")
 	keyRing, err := suite.generateTestKeyring(clientDir)
 	if err != nil {
 		panic(err)
@@ -53,9 +56,12 @@ func (suite *BackendTestSuite) SetupTest() {
 		WithTxConfig(encodingConfig.TxConfig).
 		WithKeyringDir(clientDir).
 		WithKeyring(keyRing)
+
 	allowUnprotectedTxs := false
 
-	suite.backend = NewBackend(ctx, ctx.Logger, clientCtx, allowUnprotectedTxs)
+	idxer := indexer.NewKVIndexer(dbm.NewMemDB(), ctx.Logger, clientCtx)
+
+	suite.backend = NewBackend(ctx, ctx.Logger, clientCtx, allowUnprotectedTxs, idxer)
 	suite.backend.queryClient.QueryClient = mocks.NewQueryClient(suite.T())
 	suite.backend.clientCtx.Client = mocks.NewClient(suite.T())
 	suite.backend.ctx = rpctypes.ContextWithHeight(1)

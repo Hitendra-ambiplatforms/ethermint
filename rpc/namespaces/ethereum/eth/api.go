@@ -2,7 +2,6 @@ package eth
 
 import (
 	"context"
-	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
@@ -22,8 +21,8 @@ import (
 	evmtypes "github.com/Ambiplatforms-TORQUE/ethermint/x/evm/types"
 )
 
-// The Ethereum API allows applications to connect to an Evmos node that is
-// part of the Evmos blockchain. Developers can interact with on-chain EVM data
+// The Ethereum API allows applications to connect to an Arcis node that is
+// part of the Arcis blockchain. Developers can interact with on-chain EVM data
 // and send different types of transactions to the network by utilizing the
 // endpoints provided by the API. The API follows a JSON-RPC standard. If not
 // otherwise specified, the interface is derived from the Alchemy Ethereum API:
@@ -453,23 +452,19 @@ func (e *PublicAPI) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.Log, err
 		return nil, nil
 	}
 
-	if res.TxResult.Code != 0 {
+	if res.Failed {
 		// failed, return empty logs
 		return nil, nil
 	}
 
-	parsedTxs, err := rpctypes.ParseTxResult(&res.TxResult)
+	resBlockResult, err := e.backend.GetTendermintBlockResultByNumber(&res.Height)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse tx events: %s, %v", hexTx, err)
-	}
-
-	parsedTx := parsedTxs.GetTxByHash(txHash)
-	if parsedTx == nil {
-		return nil, fmt.Errorf("ethereum tx not found in msgs: %s", hexTx)
+		e.logger.Debug("block result not found", "number", res.Height, "error", err.Error())
+		return nil, nil
 	}
 
 	// parse tx logs from events
-	return parsedTx.ParseTxLogs()
+	return backend.TxLogsFromEvents(resBlockResult.TxsResults[res.TxIndex].Events, int(res.MsgIndex))
 }
 
 // SignTypedData signs EIP-712 conformant typed data
