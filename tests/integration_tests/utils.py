@@ -1,6 +1,7 @@
 import json
 import os
 import socket
+import sys
 import time
 from pathlib import Path
 
@@ -75,6 +76,22 @@ def wait_for_new_blocks(cli, n):
             break
 
 
+def wait_for_block(cli, height, timeout=240):
+    for i in range(timeout * 2):
+        try:
+            status = cli.status()
+        except AssertionError as e:
+            print(f"get sync status failed: {e}", file=sys.stderr)
+        else:
+            current_height = int(status["SyncInfo"]["latest_block_height"])
+            if current_height >= height:
+                break
+            print("current block height", current_height)
+        time.sleep(0.5)
+    else:
+        raise TimeoutError(f"wait for block {height} timeout")
+
+
 def deploy_contract(w3, jsonfile, args=(), key=KEYS["validator"]):
     """
     deploy contract and return the deployed contract instance
@@ -108,6 +125,6 @@ def send_transaction(w3, tx, key=KEYS["validator"]):
     return w3.eth.wait_for_transaction_receipt(txhash)
 
 
-    def eth_to_bech32(addr, prefix=ETHERMINT_ADDRESS_PREFIX):
+def eth_to_bech32(addr, prefix=ETHERMINT_ADDRESS_PREFIX):
     bz = bech32.convertbits(HexBytes(addr), 8, 5)
     return bech32.bech32_encode(prefix, bz)
